@@ -13,17 +13,25 @@ class HomeController extends Controller
     public $prop = [];
     public function index(Request $request)
     {
-        
-        Product::with('categories')->chunk(100,function ($products) {
+
+        Product::chunk(
+            100,
+            function ($products) {
                 foreach ($products as $product) {
-                    $cate = $product->categories()->get();
-                    foreach ($cate as $cat) {
-                        if ($cat->status == config('categories.cate.ts.ĐT')) {
-                            if ($cat->pivot->product_id == $product->id) {
-                                $this->prop[] .=  $product;
-                            };
+                    $cates =   ($product->categories);
+                    foreach ($cates as $cate) {
+                        if ($cate->status == config('categories.cate.ts.ĐT')) {
+                            $this->prop[] .= $product;
                         }
                     }
+                    // $cate = $product->categories()->get();
+                    // foreach ($cate as $cat) {
+                    //     if ($cat->status == config('categories.cate.ts.ĐT')) {
+                    //         if ($cat->pivot->product_id == $product->id) {
+                    //             $this->prop[] .=  $product;
+                    //         };
+                    //     }
+                    // }
                 }
             }
         );
